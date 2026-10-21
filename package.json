@@ -1,0 +1,16 @@
+{
+  "name": "vef1-2026-v4",
+  "type": "module",
+  "version": "1.0.0",
+  "source": "src/index.html",
+  "scripts": {
+    "dev": "parcel --no-cache",
+    "build": "parcel build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.16.4"
+  }
+}
