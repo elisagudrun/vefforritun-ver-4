@@ -43,8 +43,10 @@ export function shuffle(array) {
  * @returns {Question[]} Valdar spurningar
  */
 export function pickQuestions(questions, count) {
-  /* TODO útfæra */
-  return []
+  return shuffle([...questions]).slice(
+    0,
+    Math.min(count, questions.length),
+  );
 }
 
 /**
@@ -89,8 +91,16 @@ console.assert(!isCorrect('', ''), 'má ekki vera tómistrengur í réttu svari'
  * @returns {Result[]} Niðurstöður
  */
 export function createResults(questions, answers) {
-  /* TODO útfæra */
-  return []
+  return questions.map((question, index) => {
+    const answer = answers[index] ?? "";
+    return {
+      category: question.category,
+      question: question.question,
+      answer,
+      correctAnswer: question.answer,
+      correct: isCorrect(answer, question.answer),
+    };
+  });
 }
 
 /**
@@ -99,8 +109,7 @@ export function createResults(questions, answers) {
  * @returns {number} Fjöldi réttra svara
  */
 export function countCorrect(results) {
-  /* TODO útfæra */
-  return 0
+  return results.filter((result) => result.correct).length;
 }
 
 /**
@@ -110,10 +119,10 @@ export function countCorrect(results) {
  * @returns {Stats} Ný tölfræði
  */
 export function updateStats(stats, results) {
-  /* TODO útfæra */
+  const correct = countCorrect(results);
   return {
-    played: 0,
-    correct: 0,
-    incorrect: 0
+    played: stats.played +1,
+    correct: stats.correct + correct,
+    incorrect: stats.incorrect + results.length - correct,
   }
 }

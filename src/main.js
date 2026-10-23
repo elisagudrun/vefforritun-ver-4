@@ -1,6 +1,6 @@
-import { questions } from "./lib/questions.js";
-import { isCorrect, shuffle } from "./lib/quiz.js";
-import { renderQuestion, showScreen } from "./lib/ui.js";
+import { questions} from "./lib/questions.js";
+import { isCorrect, shuffle, createResults, countCorrect, updateStats} from "./lib/quiz.js";
+import { renderQuestion, showScreen, renderResults, renderStats } from "./lib/ui.js";
 
 /* TODO importa úr hinum skránum */
 
@@ -31,9 +31,11 @@ const state = {
 function start() {
   /* TODO velja spurningar, endursetja stöðu, sýna fyrsta skjá */
   const shuffled = shuffle(questions);
-  state.questions = shuffled.slice(0, NUMBER_OF_QUESTIONS - 1);
+  state.questions = shuffled.slice(0, NUMBER_OF_QUESTIONS);
   state.current = 1;
   state.answers = [];
+
+  console.log('stokkaðar spurningar', shuffled)
 
   const startButton = document.querySelector(".start-button");
 
@@ -57,7 +59,14 @@ function start() {
  * @returns {void}
  */
 function finish() {
-  /* TODO uppfæra stöðu, birta stöðu og sýna seinasta skjá */
+  console.log("virkar þetta?");
+  const results = createResults(state.questions, state.answers);
+  const correctCount = countCorrect(results);
+
+  state.stats.played += 1;
+
+  renderStats(state.stats);
+  renderResults(results, correctCount);
   showScreen("results");
 }
 
@@ -71,6 +80,14 @@ function submitAnswer(answer) {
   /* TODO skrá stöðu svars, klára ef seinasta spurning, annars sýna næstu */
 
   state.answers.push(answer);
+  const currentQuestion = state.questions[state.current - 1];
+
+  if (isCorrect(answer, currentQuestion.answer)) {
+    state.stats.correct += 1;
+  } else {
+    state.stats.incorrect += 1;
+  }
+  renderStats(state.stats);
 
   const nextQuestionNum = state.current + 1;
 
@@ -80,30 +97,13 @@ function submitAnswer(answer) {
     state.current = nextQuestionNum;
     renderQuestion(
       state.questions[state.current - 1],
-      state.current - 1,
+      state.current,
       NUMBER_OF_QUESTIONS,
     );
   }
 
   // TODO klára ef seinasta spurning
 
-  /*
-  console.log(
-    "Svarið notanda er",
-    answer,
-    "rétt svar er",
-    state.questions[state.current - 1].answer,
-  );
-  const correctAnswer = isCorrect(answer, state.questions[state.current - 1].answer)
-
-  if (correctAnswer) {
-    alert('RÉTT!!')
-  } else {
-    alert('Ekki rétt :(')
-  }
-  */
-
-  //finish();
 }
 
 /**
@@ -111,14 +111,26 @@ function submitAnswer(answer) {
  * @returns {void}
  */
 function restart() {
-  /* TODO sýna upphafsskjá og stöðu */
+  showScreen("start");
+  renderStats(state.stats);
 }
 
 function initialize() {
   /* TODO finna öll element, tengja form, sýna upphafsstöðu og upphafsskjá */
-  start();
 
-  const form = document.querySelector("form");
+  showScreen("start");
+  renderStats(state.stats);
+
+  const shuffled = shuffle(questions);
+
+  console.log('stokkaðar spurningar', shuffled);
+
+  const startButton = document.querySelector(".start-button");
+
+  if (startButton) {
+    startButton.addEventListener("click", start);
+  }
+  const form = document.querySelector('form.answer-form');
 
   if (!form) {
     console.error("form not found");
@@ -145,11 +157,7 @@ function initialize() {
 
   const restartButton = document.querySelector("button.restart-button");
 
-  if (restartButton) {
-    restartButton.addEventListener("click", () => {
-      showScreen("start");
-    });
-  }
+  restartButton.addEventListener("click", restart);
 }
 
 window.addEventListener("keyup", (e) => {

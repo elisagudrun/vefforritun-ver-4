@@ -45,7 +45,35 @@ export function showScreen(name) {
  * @returns {void}
  */
 export function renderStats(stats) {
-  /* TODO útfæra */
+  const startScreen = document.querySelector("section.start");
+
+  if (!startScreen) {
+    console.warn("Upphafsskjár fannst ekki");
+    return;
+  }
+
+  const values = [
+    ["played", "Fjöldi spilaðra leikja", stats.played],
+    ["correct", "Fjöldi réttra svara", stats.correct],
+    ["incorrect", "Fjöldi rangra svara", stats.incorrect],
+  ];
+
+  let container = startScreen.querySelector(".stats");
+
+  if (!container) {
+    container = document.createElement("div");
+    container.classList.add("stats");
+    startScreen.append(container);
+  }
+
+  empty(container);
+
+  for (const [key, label, value] of values) {
+    const paragraph = document.createElement("p");
+    paragraph.dataset.stat = key;
+    paragraph.textContent = `${label}: ${value}`;
+    container.append(paragraph);
+  }
 }
 
 /**
@@ -83,5 +111,70 @@ export function renderQuestion(question, num, total) {
  * @returns {void}
  */
 export function renderResults(results, correctCount) {
-  /* TODO útfæra */
+  const resultsScreen = document.querySelector("section.results");
+  if (!resultsScreen) {
+    console.warn("Niðurstöður finnast ekki");
+    return;
+  }
+
+  let summary = resultsScreen.querySelector(".results-summary");
+
+  if (!summary) {
+    summary = document.createElement("h2");
+    summary.classList.add("results-summary");
+    resultsScreen.prepend(summary);
+  }
+
+  summary.textContent = `Rétt svör: ${correctCount} af ${results.length}`;
+
+  let list = resultsScreen.querySelector(".results-list");
+
+  if (!list) {
+    list = document.createElement("div");
+    list.classList.add("results-list");
+
+    const restartButton = resultsScreen.querySelector(".restart-button");
+
+    if (restartButton) {
+      resultsScreen.insertBefore(list, restartButton);
+    } else {
+      resultsScreen.append(list);
+    }
+  }
+
+  empty(list);
+
+  results.forEach((result, index) => {
+    const item = document.createElement("article");
+    item.classList.add("result-item");
+    item.classList.add(result.correct ? "correct" : "incorrect");
+
+    const heading = document.createElement("h3");
+    heading.textContent = `${index + 1}. ${result.question}`;
+
+    const category = document.createElement("p");
+    category.textContent = `Flokkur: ${result.category}`;
+
+    const userAnswer = document.createElement("p");
+    userAnswer.textContent = `Þitt svar: ${
+      result.answer.trim() || "Ekkert svar"
+    }`;
+
+    const correctAnswer = document.createElement("p");
+    correctAnswer.textContent = `Rétt svar: ${result.correctAnswer}`;
+
+    const status = document.createElement("p");
+    status.classList.add("result-status");
+    status.textContent = result.correct ? "Rétt svar" : "Rangt svar";
+
+    item.append(
+      heading,
+      category,
+      userAnswer,
+      correctAnswer,
+      status,
+    );
+
+    list.append(item);
+  });
 }
