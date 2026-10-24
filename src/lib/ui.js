@@ -102,6 +102,17 @@ export function renderQuestion(question, num, total) {
   } else {
     console.error("fann ekki question element");
   }
+
+  const currentElement = document.querySelector(".progress .current");
+  const totalElement = document.querySelector(".progress .total");
+
+  if (currentElement) {
+  currentElement.textContent = num + 1;
+  }
+
+  if (totalElement) {
+  totalElement.textContent = total;
+  }
 }
 
 /**

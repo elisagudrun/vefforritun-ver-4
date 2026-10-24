@@ -50,7 +50,7 @@ function start() {
       );
     });
   } else {
-    console.error("fann ekki start button");
+    console.error("fann ekki start takkan");
   }
 }
 
@@ -97,7 +97,7 @@ function submitAnswer(answer) {
     state.current = nextQuestionNum;
     renderQuestion(
       state.questions[state.current - 1],
-      state.current,
+      state.current - 1,
       NUMBER_OF_QUESTIONS,
     );
   }
