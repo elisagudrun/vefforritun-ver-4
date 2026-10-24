@@ -2,8 +2,6 @@ import { questions} from "./lib/questions.js";
 import { isCorrect, shuffle, createResults, countCorrect, updateStats} from "./lib/quiz.js";
 import { renderQuestion, showScreen, renderResults, renderStats } from "./lib/ui.js";
 
-/* TODO importa úr hinum skránum */
-
 /** Fasti sem segir til um hversu margar spurningar við sýnum. */
 const NUMBER_OF_QUESTIONS = 4;
 
@@ -29,7 +27,6 @@ const state = {
  * @returns {void}
  */
 function start() {
-  /* TODO velja spurningar, endursetja stöðu, sýna fyrsta skjá */
   const shuffled = shuffle(questions);
   state.questions = shuffled.slice(0, NUMBER_OF_QUESTIONS);
   state.current = 1;
@@ -76,9 +73,9 @@ function finish() {
  * @returns {void}
  */
 function submitAnswer(answer) {
-  /* TODO skrá stöðu svars, klára ef seinasta spurning, annars sýna næstu */
 
   state.answers.push(answer);
+  
   const currentQuestion = state.questions[state.current - 1];
 
   if (isCorrect(answer, currentQuestion.answer)) {
@@ -100,9 +97,6 @@ function submitAnswer(answer) {
       NUMBER_OF_QUESTIONS,
     );
   }
-
-  // TODO klára ef seinasta spurning
-
 }
 
 /**
@@ -115,7 +109,6 @@ function restart() {
 }
 
 function initialize() {
-  /* TODO finna öll element, tengja form, sýna upphafsstöðu og upphafsskjá */
 
   showScreen("start");
   renderStats(state.stats);
