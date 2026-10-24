@@ -40,16 +40,14 @@ function start() {
   const startButton = document.querySelector(".start-button");
 
   if (startButton) {
-    startButton.addEventListener("click", (e) => {
-      showScreen("question");
+    showScreen("question");
 
-      renderQuestion(
-        state.questions[state.current - 1],
-        state.current - 1,
-        NUMBER_OF_QUESTIONS,
-      );
-    });
-  } else {
+    renderQuestion(
+      state.questions[state.current - 1],
+      state.current - 1,
+      NUMBER_OF_QUESTIONS,
+    );
+     } else {
     console.error("fann ekki start takkan");
   }
 }
@@ -59,7 +57,7 @@ function start() {
  * @returns {void}
  */
 function finish() {
-  console.log("virkar þetta?");
+  //console.log("virkar þetta?");
   const results = createResults(state.questions, state.answers);
   const correctCount = countCorrect(results);
 
@@ -68,6 +66,7 @@ function finish() {
   renderStats(state.stats);
   renderResults(results, correctCount);
   showScreen("results");
+
 }
 
 /**
@@ -155,9 +154,11 @@ function initialize() {
     input?.focus();
   });
 
-  const restartButton = document.querySelector("button.restart-button");
+  const restartButton = document.querySelector(".restart-button");
 
+  if (restartButton) {
   restartButton.addEventListener("click", restart);
+  }
 }
 
 window.addEventListener("keyup", (e) => {

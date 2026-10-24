@@ -15,3 +15,4 @@
 - [ x] búa til element á niðurstöðuskjá
 - [x ] setja inn niðurstöður út frá svörum
 - [x ] merkja rétt svör VS röng svör á niðurstöðuskjá
+ - [] spila aftur takkinn, ná að setja hann inn
